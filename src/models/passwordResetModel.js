@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/db.config.js';
 import User from './userModel.js';
 
-const PasswordReset = sequelize.define('PasswordReset', {
+const PasswordReset = sequelize.define('password_reset', {
     reset_id: { 
         type: DataTypes.UUID, 
         defaultValue: uuidv4, 

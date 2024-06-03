@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, logoutUser, requestResetPassword, resetPassword, updateUserPassword } from '../controllers/userController.js';
+import { registerUser, loginUser, logoutUser, requestResetPassword, resetPassword } from '../controllers/userController.js';
 import { authenticate } from '../middleware/authenticate.js';
 
 const router = express.Router();
@@ -18,8 +18,5 @@ router.post('/request-reset-password', requestResetPassword);
 
 // Route untuk mengatur ulang password
 router.post('/reset-password', resetPassword);
-
-// Route untuk mengupdate password pengguna
-router.put('/update-password', authenticate, updateUserPassword);
 
 export default router;

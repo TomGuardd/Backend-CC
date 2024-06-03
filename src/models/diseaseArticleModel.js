@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/db.config.js';
 import Disease from './diseaseModel.js';
 
-const DiseaseArticle = sequelize.define('DiseaseArticle', {
+const DiseaseArticle = sequelize.define('disease_article', {
     article_id: { 
         type: DataTypes.UUID, 
         defaultValue: uuidv4, 

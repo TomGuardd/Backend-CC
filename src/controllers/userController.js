@@ -167,36 +167,3 @@ export const resetPassword = async (req, res) => {
         handleDbError(error, res);
     }
 };
-  
-// Update User Password
-export const updateUserPassword = async (req, res) => {
-    const { userId, oldPassword, newPassword } = req.body;
-    if (!oldPassword || !newPassword) {
-        return res.status(400).json({ message: "Old password and new password are required." });
-    }
-
-    try {
-        const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found." });
-        }
-
-        const validPassword = await bcrypt.compare(oldPassword, user.password);
-        if (!validPassword) {
-            return res.status(401).json({ message: "Invalid old password." });
-        }
-
-        if (oldPassword === newPassword) {
-            return res.status(400).json({ message: "New password must be different from the old password." });
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        await User.update({ password: hashedPassword }, { where: { user_id: user.user_id } });
-
-        res.status(200).json({ message: "Password updated successfully." });
-    } catch (error) {
-        handleDbError(error, res);
-    }
-};

@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { updateUserName, uploadProfilePicture, getProfilePicture, getUserProfile } from '../controllers/profileController.js';
+import { getUserProfile, updateProfile } from '../controllers/profileController.js';
 import { authenticate } from '../middleware/authenticate.js';
 
 const router = express.Router();
@@ -27,21 +27,14 @@ const upload = multer({
 });
 
 // Route untuk mendapatkan profil pengguna : userId, name, email, profile_picture_url
-router.get('/:userId', authenticate, getUserProfile);
+router.get('/', authenticate, getUserProfile);
 
-// Route untuk mengupdate nama pengguna
-router.put('/update-name', authenticate, updateUserName);
-
-// Route untuk mengupload gambar profil
-router.post('/upload-picture/:userId', authenticate, upload.single('picture'), uploadProfilePicture, (error, req, res, next) => {
+// Route untuk mengupdate profil pengguna
+router.post('/update', authenticate, upload.single('picture'), updateProfile, (error, req, res, next) => {
     if (error) {
         return res.status(400).json({ message: error.message });
     }
     next();
 });
-
-// Jaga-jaga siapa tau butuh
-// Route untuk mendapatkan gambar profil
-router.get('/picture/:userId', authenticate, getProfilePicture);
 
 export default router;

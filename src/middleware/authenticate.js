@@ -17,10 +17,3 @@ export const authenticate = (req, res, next) => {
         res.status(400).json({ message: "Invalid token." });
     }
 };
-
-export const authorize = (req, res, next) => {
-    if (req.user.user_id !== req.params.userId) {
-        return res.status(403).json({ message: "Unauthorized." });
-    }
-    next();
-};

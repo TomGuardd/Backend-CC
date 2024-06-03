@@ -4,7 +4,7 @@ import sequelize from '../config/db.config.js';
 import Image from './imageModel.js';
 import Disease from './diseaseModel.js';
 
-const ImageDiagnosis = sequelize.define('ImageDiagnosis', {
+const ImageDiagnosis = sequelize.define('image_diagnosis', {
     diagnosis_id: { 
         type: DataTypes.UUID, 
         defaultValue: uuidv4, 
