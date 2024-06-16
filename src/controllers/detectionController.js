@@ -46,6 +46,8 @@ export const detectDisease = async (req, res) => {
             const predictedClassName = class_names[predictedClassIndex];
             const predictedClassScore = (predictionScores[predictedClassIndex] * 100).toFixed(2);
 
+            const actionRequired = predictedClassName !== 'Healthy';
+
             const disease = await Disease.findOne({ where: { disease_name: predictedClassName } });
             if (!disease) {
                 return res.status(404).json({ message: 'Disease not found in database' });
@@ -63,28 +65,30 @@ export const detectDisease = async (req, res) => {
                 diagnosis_id: uuidv4(),
                 image_id: image.image_id,
                 disease_id: disease.disease_id,
-                confidence_level: predictedClassScore
+                confidence_level: predictedClassScore,
             });
 
-            const recommendations = await Recommendation.findAll({
+            const recommendations = actionRequired ? await Recommendation.findAll({
                 where: { disease_id: disease.disease_id },
                 attributes: ['recommendation_text']
-            });
+            }) : [];
 
             const parsedRecommendations = recommendations
                 .map(r => parseRecommendations(r.recommendation_text))
                 .flat();
 
-            const articles = await DiseaseArticle.findAll({
+            const articles = actionRequired ? await DiseaseArticle.findAll({
                 where: { disease_id: disease.disease_id },
                 attributes: ['article_content', 'article_url', 'thumbnail']
-            });
+            }) : [];
 
             res.status(200).json({
-                message: 'Disease detected successfully',
+                message: 'Detection process completed',
                 data: {
-                    disease: predictedClassName,
+                    condition: predictedClassName,
                     confidence: predictedClassScore,
+                    description: disease.description,
+                    actionRequired: actionRequired,
                     recommendations: parsedRecommendations,
                     articles: articles.map(a => ({
                         content: a.article_content,
