@@ -50,7 +50,6 @@ export const updateProfile = async (req, res) => {
     const file = req.file;
 
     try {
-        // Fetch user and profile
         const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
@@ -63,12 +62,10 @@ export const updateProfile = async (req, res) => {
 
         const updateData = {};
 
-        // Update Name if provided
         if (newName) {
             updateData.name = newName;
         }
 
-        // Handle password change
         if (oldPassword && newPassword) {
             const validPassword = await bcrypt.compare(oldPassword, user.password);
             if (!validPassword) {
@@ -84,7 +81,6 @@ export const updateProfile = async (req, res) => {
             await User.update({ password: hashedPassword }, { where: { user_id: userId } });
         }
 
-        // Update Profile Picture if file is provided
         if (file) {
             const folder = 'profile-picture';
             const newFileName = `${folder}/${userId}-${Date.now()}-${file.originalname}`;
@@ -92,7 +88,6 @@ export const updateProfile = async (req, res) => {
             const currentPictureUrl = profile.profile_picture_url;
             const currentFileName = currentPictureUrl?.split('/').pop();
 
-            // Delete old file if not default
             if (currentPictureUrl && !currentPictureUrl.includes('default.png')) {
                 const oldBlob = bucket.file(`${folder}/${currentFileName}`);
                 await oldBlob.delete();
@@ -103,7 +98,6 @@ export const updateProfile = async (req, res) => {
             blobStream.on('finish', async () => {
                 const publicUrl = `https://storage.googleapis.com/${bucket.name}/${newBlob.name}`;
                 updateData.profile_picture_url = publicUrl;
-                // Finalize update with new name, password, and picture
                 await Profile.update(updateData, { where: { user_id: userId } });
                 res.status(200).json({
                     message: "Profile updated successfully.",
@@ -113,7 +107,6 @@ export const updateProfile = async (req, res) => {
             });
             blobStream.end(file.buffer);
         } else {
-            // Update just the name and/or password if no file is provided
             await Profile.update(updateData, { where: { user_id: userId } });
             res.status(200).json({ message: "Profile updated successfully.", name: newName });
         }

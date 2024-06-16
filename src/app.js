@@ -4,12 +4,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
+import logger from './middleware/logger.js';
+
 import userRoutes from './routes/userRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
-// import imageRoutes from './routes/imageRoutes.js';
+import detectionRoutes from './routes/detectionRoutes.js';
 
-import errorHandler from './middleware/errorHandler.js';
-import logger from './middleware/logger.js';
+import { loadModel } from './utils/loadModel.js';
 
 dotenv.config();
 
@@ -22,18 +23,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger);
 
-app.get('/', (req, res) => {
-  res.send('Welcome to the TomGuard Backend API!');
+app.use(async (req, res, next) => {
+    if (!app.locals.model) {
+        try {
+            app.locals.model = await loadModel();
+        } catch (error) {
+            return res.status(500).json({
+                message: 'Failed to load the model.',
+                error: error.message,
+            });
+        }
+    }
+    next();
 });
 
 app.use('/users', userRoutes);
 app.use('/profiles', profileRoutes);
-// app.use('/images', imageRoutes);
-
-app.use(errorHandler);
+app.use('/', detectionRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+    console.log(`Server is running on port ${PORT}.`);
 });
 
 export default app;
