@@ -75,8 +75,13 @@ export const loginUser = async (req, res) => {
         if (!validPassword) {
             return res.status(401).json({ message: "Invalid password." });
         }
-        
-        createTokenSendResponse(user, res);
+
+        const profile = await Profile.findOne({ where: { user_id: user.user_id } });
+        if (!profile) {
+            return res.status(404).json({ message: "Profile not found for this user." });
+        }
+
+        createTokenSendResponse(user, profile, res);
     } catch (error) {
         handleDbError(error, res);
     }
