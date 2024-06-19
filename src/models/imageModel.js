@@ -1,8 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/db.config.js';
-import User from './userModel.js';
-import Disease from './diseaseModel.js';
 
 const Image = sequelize.define('image', {
     image_id: { 
@@ -30,8 +28,5 @@ const Image = sequelize.define('image', {
     underscored: true,
     freezeTableName: true
 });
-
-Image.belongsTo(User, { foreignKey: 'user_id' });
-Image.belongsTo(Disease, { foreignKey: 'disease_id' });
 
 export default Image;

@@ -14,14 +14,17 @@ User.hasMany(PasswordReset, { foreignKey: 'user_id' });
 PasswordReset.belongsTo(User, { foreignKey: 'user_id' });
 
 Image.belongsTo(User, { foreignKey: 'user_id' });
-Image.belongsTo(Disease, { foreignKey: 'disease_id' });
+Image.belongsTo(Disease, { foreignKey: 'disease_id', as: 'disease_model' });
+Image.hasMany(ImageDiagnosis, { foreignKey: 'image_id', as: 'image_diagnoses' });
 
 ImageDiagnosis.belongsTo(Image, { foreignKey: 'image_id' });
 ImageDiagnosis.belongsTo(Disease, { foreignKey: 'disease_id' });
 
-DiseaseArticle.belongsTo(Disease, { foreignKey: 'disease_id' });
-
+Disease.hasMany(Recommendation, { foreignKey: 'disease_id', as: 'recommendations' });
 Recommendation.belongsTo(Disease, { foreignKey: 'disease_id' });
+
+Disease.hasMany(DiseaseArticle, { foreignKey: 'disease_id', as: 'disease_articles' });
+DiseaseArticle.belongsTo(Disease, { foreignKey: 'disease_id' });
 
 export {
     User,

@@ -1,7 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/db.config.js';
-import Disease from './diseaseModel.js';
 
 const Recommendation = sequelize.define('recommendation', {
     recommendation_id: { 
@@ -22,7 +21,5 @@ const Recommendation = sequelize.define('recommendation', {
     underscored: true,
     freezeTableName: true
 });
-
-Recommendation.belongsTo(Disease, { foreignKey: 'disease_id' });
 
 export default Recommendation;

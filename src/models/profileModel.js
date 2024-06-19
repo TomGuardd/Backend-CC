@@ -1,7 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/db.config.js';
-import User from './userModel.js';
 
 const Profile = sequelize.define('profile', {
     profile_id: { 
@@ -33,7 +32,5 @@ const Profile = sequelize.define('profile', {
     underscored: true,
     freezeTableName: true
 });
-
-Profile.belongsTo(User, { foreignKey: 'user_id' });
 
 export default Profile;

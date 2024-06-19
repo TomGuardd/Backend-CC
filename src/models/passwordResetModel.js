@@ -1,7 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/db.config.js';
-import User from './userModel.js';
 
 const PasswordReset = sequelize.define('password_reset', {
     reset_id: { 
@@ -30,7 +29,5 @@ const PasswordReset = sequelize.define('password_reset', {
     underscored: true,
     freezeTableName: true
 });
-
-PasswordReset.belongsTo(User, { foreignKey: 'user_id' });
 
 export default PasswordReset;

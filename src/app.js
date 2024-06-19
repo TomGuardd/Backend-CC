@@ -9,6 +9,7 @@ import logger from './middleware/logger.js';
 import userRoutes from './routes/userRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import detectionRoutes from './routes/detectionRoutes.js';
+import historyRoutes from './routes/historyRoutes.js';
 
 import { loadModel } from './utils/loadModel.js';
 
@@ -40,6 +41,7 @@ app.use(async (req, res, next) => {
 app.use('/users', userRoutes);
 app.use('/profiles', profileRoutes);
 app.use('/', detectionRoutes);
+app.use('/', historyRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);

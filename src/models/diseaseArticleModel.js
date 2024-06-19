@@ -1,7 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/db.config.js';
-import Disease from './diseaseModel.js';
 
 const DiseaseArticle = sequelize.define('disease_article', {
     article_id: { 
@@ -38,7 +37,5 @@ const DiseaseArticle = sequelize.define('disease_article', {
     underscored: true,
     freezeTableName: true
 });
-
-DiseaseArticle.belongsTo(Disease, { foreignKey: 'disease_id' });
 
 export default DiseaseArticle;

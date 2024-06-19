@@ -2,10 +2,7 @@ import { Image, ImageDiagnosis, Disease, Recommendation, DiseaseArticle } from '
 import { v4 as uuidv4 } from 'uuid';
 import { bucket } from '../config/storage.config.js';
 import { imageToTensor, validateImage } from '../utils/imageHelpers.js';
-
-function parseRecommendations(text) {
-    return text.split(/\d+\.\s+/).slice(1).map(item => item.trim().replace(/[\r\n]+/g, ' '));
-}
+import { parseRecommendations } from '../utils/parser.js';
 
 const class_names = [
     'Bacterial spot', 'Early blight', 'Late blight', 'Leaf mold',
@@ -56,7 +53,7 @@ export const detectDisease = async (req, res) => {
             const image = await Image.create({
                 image_id: uuidv4(),
                 user_id: userId,
-                disease_id: disease.disease_id,
+                disease_id: disease.disease_id, 
                 image_url: publicUrl,
                 upload_date: new Date()
             });
